@@ -6,7 +6,7 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     fetch('/api/signup', {
@@ -26,39 +26,42 @@ export default function Signup() {
   }
 
 
-  const handleUsernameChange = (event) => {
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
   };
 
-  const handlePasswordChange = (event) => {
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
 
   return (
-    <div className="signup">
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          value={username}
-          onChange={handleUsernameChange}
-          placeholder="username"
-          required
-        />
-        <input
-          value={password}
-          type="password"
-          onChange={handlePasswordChange}
-          placeholder="password"
-          required
-        />
-        <button
-          type="button"
-          onClick={handleSubmit} 
-        >
-          Sign up
-        </button>
-      </form>
-      <button onClick={() => navigate('/login')}>Login Page</button>
+    <div>
+      <div className="signup">
+        <h1>Signup</h1>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <div>
+              <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={handleUsernameChange}
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+            <button type="submit">
+              Signup
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, SyntheticEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [liquor, setLiquor] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = {
