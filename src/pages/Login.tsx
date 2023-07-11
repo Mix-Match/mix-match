@@ -34,30 +34,33 @@ export default function Login() {
   };
 
   return (
-    <div className="login">
-      <h1>Login</h1>
-      <div className="flex items-center justify-center h-screen">
-      <div className="w-64">
-        <h2 className="text-2xl mb-4">Login</h2>
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Username"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-          />
-        </div>
-        <button className="w-full bg-blue-500 text-white py-2 rounded-md">
-          Login
-        </button>
+    <div>
+      <div className="login">
+        <h1>Login</h1>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <div>
+              <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={handleUsernameChange}
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+            <button type="submit">
+              Login
+            </button>
+          </div>
+        </form>
       </div>
-    </div>
     </div>
   );
 }

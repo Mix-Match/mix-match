@@ -1,4 +1,23 @@
-@import 'tailwindcss/base';
+/* @import 'tailwindcss/base';
 @import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import 'tailwindcss/utilities'; */
 
+.Navbar {
+  display: flex;
+  align-items: center;
+  justify-content:space-evenly;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: aqua;
+}
+
+.signup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: aqua;
+}
