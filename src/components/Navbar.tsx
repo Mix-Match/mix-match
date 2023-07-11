@@ -1,4 +1,4 @@
-import React, { useState, SyntheticEvent } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
@@ -11,7 +11,7 @@ export default function Navbar() {
     const formData = {
       liquor,
     };
-    navigate("/main", { state: { ...formData } });
+    navigate("/", { state: { ...formData } });
   };
 
   const handleLiquorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,9 +20,6 @@ export default function Navbar() {
 
   return (
     <div className="Navbar">
-      <div>
-        
-      </div>
       <div>
         <form onSubmit={handleSubmit}>
           <input

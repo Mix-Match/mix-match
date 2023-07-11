@@ -35,7 +35,7 @@ export default function Signup() {
   };
 
   return (
-    <div>
+    <div className='signup1'>
       <div className="signup">
         <h1>Signup</h1>
         <form onSubmit={handleSubmit}>
@@ -56,11 +56,12 @@ export default function Signup() {
                 onChange={handlePasswordChange}
               />
             </div>
-            <button type="submit">
-              Signup
-            </button>
           </div>
         </form>
+        <button type="submit">
+              Signup
+            </button>
+        <button onClick={() => navigate('/login')}>Login Page</button>
       </div>
     </div>
   );
