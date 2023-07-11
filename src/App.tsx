@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       // { path: "/", element: <Home /> },
-      // { path: "/main", element: <Main />},
+      // { path: "/", element: <Main />},
       { path: "/login", element: <Login />},
       { path: "/signup", element: <Signup />}
     ],
@@ -20,9 +20,6 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-  <RouterProvider 
-    router={router}>
-  </RouterProvider>
+  <RouterProvider router={router}/>
   );
-
 }
