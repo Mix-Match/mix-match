@@ -128,3 +128,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+COCKTAILDB_APIKEY="9973533"
+PG_URI="postgres://ncrckqkz:D8qwFatoZGX6GfmjeruMTE8iOB9XwXBe@mahmud.db.elephantsql.com/ncrckqkz"
