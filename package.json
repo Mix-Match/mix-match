@@ -62,8 +62,8 @@
     "@types/pg": "^8.10.2",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0"
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "ts-node-dev": "^2.0.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   },
   "proxy": "http://localhost:5001"
 }
