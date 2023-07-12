@@ -11,7 +11,7 @@ export default function Navbar() {
     const formData = {
       liquor,
     };
-    navigate("/", { state: { ...formData } });
+    navigate("/main", { state: { ...formData } });
   };
 
   const handleLiquorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +32,7 @@ export default function Navbar() {
         </form>
       </div>
       <div>
-        <button onClick={() => navigate("/login")}>Login or Sign Up</button>
+        <button onClick={() => navigate("/")}>Login or Sign Up</button>
       </div>
     </div>
   );
