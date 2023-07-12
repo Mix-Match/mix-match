@@ -10,8 +10,8 @@
     "@types/node": "^16.18.38",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
-    "axios": "^1.4.0",
     "@types/react-router-dom": "^5.3.3",
+    "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "concurrently": "^8.2.0",
@@ -24,6 +24,7 @@
     "pg": "^8.11.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.10.1",
     "react-router-dom": "^6.14.1",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.3",
@@ -56,14 +57,14 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/pg": "^8.10.2",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "ts-node-dev": "^2.0.0"
   },
   "proxy": "http://localhost:5001"
 }
