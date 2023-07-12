@@ -1,6 +1,17 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import { pool } from '../server';
+import jwt from 'jsonwebtoken';
 
-
+const getUserIdFromToken = (req: Request): number | null => {
+  const authorizationHeader = req.headers.authorization;
+  if (authorizationHeader) {
+    const token = authorizationHeader?.split(' ')[1];
+    const decodedToken = jwt.decode(token) as { userId: number } | null;
+    return decodedToken?.userId || null;
+  } else {
+    return null;
+  }
+};
 
 // Middleware for fetching to cocktail API, return array of objects with cocktails
 export const getDrinksByLiquor = async (req: Request, res: Response) => {
@@ -49,30 +60,105 @@ export const getInstructionsById = async (req: Request, res: Response) => {
   }
 };
 
-// Middleware for user to save cocktail in DB
-// export const addSavedDrink = async (req, res, next) => {
-//     const obj = req.body;
-//     const { application_date, company_name, position_title } = obj;
-//     const values = [application_date, company_name, position_title];
-//     const text = `
-//     INSERT INTO
-//       job_apps (application_date, company_name, position_title)
-//     VALUES
-//       ($1,$2,$3)
-//     RETURNING *
-//     `;
-  
-//     try {
-//       const result = await db.query(text, values);
-//       console.log('INSERTED', result.rows);
-//       return next();
-//     } catch (err) {
-//       return next({
-//         log: 'jobAppController.addJobApp: ERROR: Database error',
-//       });
-//     }
-//   };
+//Middleware for user to save cocktail in DB
+export const addSavedDrink = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { name, image } = req.body;
 
-// Middleware for user to remove cocktail from DB
+  // const userId = getUserIdFromToken(req);
+  const { userId } = req.body;
 
+  if (!userId) {
+    return res.redirect('/api/auth/login');
+  }
 
+  // TODO: wrap next part in a conditions to check if decodedToken.userId exists:
+  // TODO: modularize JWT/userId functionality to use in the delete drink middleware.
+  const values = [name, image, userId];
+  const text = `
+    INSERT INTO
+      favorites (name, image, userid)
+    VALUES
+      ($1,$2,$3)
+    RETURNING *
+    `;
+
+  try {
+    const result = await pool.query(text, values);
+    console.log('INSERTED', result.rows);
+    return next();
+  } catch (err) {
+    return next({
+      log: 'drinksController.addSavedDrink: ERROR: Database error',
+    });
+  }
+};
+
+//Middleware for user to remove cocktail from DB
+
+export const deleteSavedDrink = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { name } = req.body;
+  console.log('file: drinksController.ts:108 | name:', name)
+
+  // const userId = getUserIdFromToken(req);
+  const { userId } = req.body;
+
+  if (!userId) {
+    return res.redirect('/api/auth/login');
+  }
+
+  const values = [name, userId];
+  console.log('file: drinksController.ts:118 | values:', values)
+
+  const text = `
+    DELETE FROM favorites
+    WHERE name = $1 AND userid = $2 
+    `;
+
+  try {
+    const result = await pool.query(text, values);
+    console.log('DELETED', result.rows);
+    return next();
+  } catch (err) {
+    return next({
+      log: 'drinksController.deleteSavedDrink: ERROR: Database error',
+    });
+  }
+};
+
+//Middleware for getting all user favorites from DB
+
+export const getSavedDrinks = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // const userId = getUserIdFromToken(req);
+  const { userId } = req.body;
+
+  const values = [userId];
+
+  const text = `
+    SELECT *
+    FROM favorites
+    WHERE userid = $1
+    `;
+
+  try {
+    const result = await pool.query(text, values);
+    console.log(result);
+    const { rows } = result;
+    res.json(rows);
+  } catch (err) {
+    return next({
+      log: 'drinksController.getSavedDrinks: ERROR: Database error',
+    });
+  }
+};
