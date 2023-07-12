@@ -6,10 +6,16 @@ interface DrinkCardProps {
   id: string;
 }
 
+interface drinkDetails {
+  quantity?: string | number,
+  ingredient: string
+}
+
 const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
   // handleSubmit: send fetch request to backend with drinkId
   const [showModal, setShowModal] = useState(false);
-  const [instructions, setInstructions] = useState<string[]>([]);
+  const [ingredients, setIngredients] = useState<string[]>([]);
+  const [instructions, setInstructions] = useState("");
 
   const handleSubmit = async () => {
     try {
@@ -17,7 +23,7 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
       const data = await response.json();
       const drink = data.drinks[0];
       
-      const details = [];
+      const details: drinkDetails[] = [];
       // while loop to pull ingredients + quantity
       let ingNum = 1;
       
@@ -28,12 +34,10 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
         })
         ingNum++
       }
-
-      console.log(data.drinks);
-      console.log(details);
-
-      setInstructions(details.map((detail) => drink.strInstructions + 
+      setIngredients(details.map((detail) => 
       detail.quantity + detail.ingredient));
+
+      setInstructions(drink.strInstructions);
 
       setShowModal(true);
     } catch (error) {
@@ -42,12 +46,12 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
   }
 
   const favSubmit = async () => {
-    const addDrink = await fetch(`/save/:${id}`, {
+    const addDrink = await fetch('/drinks', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         name: name,
-        drinkId: id,
+        drinkid: id,
         image: imgUrl
       })
     })
@@ -75,10 +79,12 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
                   </span>
                   <h2>{name} Instructions</h2>
                   <ul>
-                    {instructions.map((instruction, index) => (
-                      <li key={index}>{instruction}</li>
+                    {ingredients.map((ingredients, index) => (
+                      <li key={index}>{ingredients}</li>
                     ))}
                   </ul>
+                  <b></b>
+                  <div>{instructions}</div>
                 </div>
               </div>
             )}
