@@ -1,27 +1,35 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 
 
 // Middleware for fetching to cocktail API, return array of objects with cocktails
-export const getDrinksByLiquor = async (req: Request, res: Response) => {
+export const getDrinksByLiquor = async (req: Request, res: Response, next: NextFunction) => {
+  const { liquor } = req.params; // Get the chosen liquor from the request parameters
+  console.log("🚀 ~ file: drinksController.ts:8 ~ getDrinksByLiquor ~ liquor:", liquor)
+  const url = `https://www.thecocktaildb.com/api/json/v2/${process.env.COCKTAILDB_APIKEY}/filter.php?i=${liquor}`
+  
+  const payload = {
+    method: 'GET'
+  }
+
   try {
-    const { liquor } = req.params; // Get the chosen liquor from the request parameters
 
     // Make a request to the API using the chosen liquor
-    const apiResponse = await fetch(
-      `https://www.thecocktaildb.com/api/json/v2/${process.env.COCKTAILDB_APIKEY}/filter.php?i=${liquor}`
-    );
+    const apiResponse = await fetch(url, payload);
     // const cocktailDB = `https://www.thecocktaildb.com/api/json/v2/${process.env.COCKTAILDB_APIKEY}/list.php?`;
     const data = await apiResponse.json();
 
     // Process the response and send it back to the frontend
-    const drinks = data.drinks.map((drink: any) => ({
-      strDrink: drink.strDrink,
-      strDrinkThumb: drink.strDrinkThumb,
-      idDrink: drink.idDrink,
-    }));
+    // const drinks = data.drinks.map((drink: any) => ({
+    //   strDrink: drink.strDrink,
+    //   strDrinkThumb: drink.strDrinkThumb,
+    //   idDrink: drink.idDrink,
+    // }));
 
-    res.json({ drinks });
+    // res.json({ drinks });
+    res.locals.drinks = data.drinks;
+    return next();
+
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ message: 'Server error' });

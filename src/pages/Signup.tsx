@@ -9,16 +9,16 @@ export default function Signup() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    fetch('/api/signup', {
+    fetch('http://localhost:5001/api/auth/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password: password }),
+      body: JSON.stringify({ username, password }),
     })
       .then((response) => response.json())
       .then((userData) => {
-        navigate('/', { state: { user: userData, isLogged: true } });
+        navigate('/main', { state: { user: userData, isLogged: true } });
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -57,11 +57,11 @@ export default function Signup() {
               />
             </div>
           </div>
-        </form>
-        <button type="submit">
+          <button type="submit">
               Signup
             </button>
-        <button onClick={() => navigate('/login')}>Login Page</button>
+        </form>
+        <button onClick={() => navigate('/')}>Login Page</button>
       </div>
     </div>
   );

@@ -9,7 +9,9 @@ import {
 const router = express.Router();
 
 // Route for fetching to cocktail API, return array of objects with cocktails
-router.get('/api/getdrinks/:liquor', getDrinksByLiquor);
+router.get('/:liquor', getDrinksByLiquor, (req, res) => {
+  res.status(200).json(res.locals.drinks);
+});
 
 // Route for fetching to cocktail API with the cocktail ID, returns recipe and more information on that specific cocktail
 router.get('/api/getinstructions/:id', getInstructionsById);
