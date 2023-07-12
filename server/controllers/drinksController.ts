@@ -74,23 +74,23 @@ export const addSavedDrink = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { name, image } = req.body;
+  const { name, image, drinkid } = req.body;
 
   // const userId = getUserIdFromToken(req);
   const { userId } = req.body;
 
   if (!userId) {
-    return res.redirect('/api/auth/login');
+    return res.redirect('/auth/login');
   }
 
   // TODO: wrap next part in a conditions to check if decodedToken.userId exists:
   // TODO: modularize JWT/userId functionality to use in the delete drink middleware.
-  const values = [name, image, userId];
+  const values = [name, image, userId, drinkid];
   const text = `
     INSERT INTO
-      favorites (name, image, userid)
+      favorites (name, image, userid, drinkid)
     VALUES
-      ($1,$2,$3)
+      ($1,$2,$3,$4)
     RETURNING *
     `;
 
@@ -119,7 +119,7 @@ export const deleteSavedDrink = async (
   const { userId } = req.body;
 
   if (!userId) {
-    return res.redirect('/api/auth/login');
+    return res.redirect('/auth/login');
   }
 
   const values = [name, userId];
