@@ -2,10 +2,10 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { Pool } from 'pg';
-import router from './routes/api';
+import router from './routes/drinkRoutes';
 import authRoutes from './routes/authRoutes';
 import ingredientsRoutes from './routes/ingredientRoutes';
-import { getDrinksByLiquor, getInstructionsById } from './controllers/drinksController';
+// import { getDrinksByLiquor, getInstructionsById } from './controllers/drinksController';
 // import axios from 'axios';
 // import path from 'path';
 
@@ -18,7 +18,7 @@ const app = express();
 const port = process.env.PORT || 5001;
 
 // Set the PostgreSQL connection string from environment variables
-const pool = new Pool({
+export const pool = new Pool({
   connectionString: process.env.PG_URI,
 });
 
