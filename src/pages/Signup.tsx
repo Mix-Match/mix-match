@@ -22,6 +22,7 @@ export default function Signup() {
         console.log('user data: ', userData)
         if (userData.error) setValidLogin(false);
         else {
+          localStorage.setItem('user', JSON.stringify(userData));
           navigate('/main', { state: { user: userData, isLogged: true } });
         }
       })

@@ -1,4 +1,3 @@
-import { response } from 'express';
 import React, { useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
 
@@ -21,6 +20,7 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id, favorite, updat
   const [showModal, setShowModal] = useState(false);
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [instructions, setInstructions] = useState<string[]>([]);
+  const [favorited, setFavorited] = useState(favorite)
 
   const handleSubmit = async () => {
     try {
@@ -44,24 +44,26 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id, favorite, updat
 
       setIngredients(details.map((detail) => detail.quantity ? `${detail.quantity} ${detail.ingredients}` : `${detail.ingredients}`));
 
-      // TODO: refactor to account for edge cases: "Dr. Pepper", "Step (num)"
+      // TODO: refactor to account for edge cases: "Dr. Pepper", "Step (num)", (e.g./i.e./etc.) multiple trailing punctuation marks
       const convert: string[] = [];
 
-      // fix inconsistent line breaks from returned instructions
+      //  break instructions out into arr elements
+      // fix inconsistent line breaks from returned instructions, inconsistent capitalization, numbering, punctuation
       const test = drink.strInstructions.replace(/(?:\r\n|\r|\n)/g, " ")
-      
-      // fix inconsistent capitalization, numbering, punctuation + break instructions out into arr elements
-      test.split(". ").forEach((e: string, i: number) => {
-        e.trim();
+
+      test.split(/\d\./g).join('. ').split(". ").forEach((e: string) => {
+        // don't push if string is empty
+        if (![...e.matchAll(/\w+/g)].length) return;
         const first = e[0].toUpperCase();
         const last = e[e.length - 1];
+        // delete last character if not alpha
         const output = !last.match(/^([a-z\(\)]+)$/i) ? first + e.slice(1, e.length - 1) : first + e.slice(1);
-        if (e) convert.push(`${output}.`)
+        convert.push(`${output}.`)
       })
 
       setInstructions(convert);
 
-      setShowModal(true);
+      setShowModal(!showModal);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -78,47 +80,43 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id, favorite, updat
         image: imgUrl
       })
     })
-    updateFavorites(id, !favorite)
+    setFavorited(!favorited)
+    updateFavorites(id, !favorited)
   }
 
-  const closeModal = () => {
-    setShowModal(false);
-  };
+  // const closeModal = () => {
+  //   setShowModal(false);
+  // };
   
   return (
-    <div className='card'>  
-      <h1>{name}</h1>
-      <img src={imgUrl} alt={`${name}`}/>
-      <button
-      onClick={() => handleSubmit()}
-      >Instructions</button>
-      <button id='heart' onClick={() => favSubmit()}>
-        {favorite ? <FaHeart className='favorite heartIcon'/> : <FaHeart className='notFavorite heartIcon'/>}
+    <>  
+      <div className='cardheader'>
+        <h1 className='cardName'>{name}</h1>
+        <button id='heart' onClick={() => favSubmit()}>
+          {favorited ? <FaHeart className='favorite heartIcon'/> : <FaHeart className='notFavorite heartIcon'/>}
+        </button>
+      </div>
+      <img src={imgUrl} alt={`${name}`} />
+      <button onClick={() => handleSubmit()} className="instructionButton">
+        Instructions
+        <span className='close'>{showModal ? ' ▲' : '▼' }</span>
       </button>
-
       {showModal && (
-              <div className="modal">
-                <div className="modal-content">
-                  <span className="close" onClick={closeModal}>
-                    &times;
-                  </span>
-                  <h3>Ingredients:</h3>
-                  <ul>
-                    {ingredients.map((ingredients, index) => (
-                      <li key={index}>{ingredients}</li>
-                    ))}
-                  </ul>
-                  <b></b>
-                  <h3>Instructions:</h3>
-                  <ol>
-                    {instructions.map((instructions, index) => (
-                      <li key={index}>{instructions}</li>
-                    ))}
-                  </ol>
-                </div>
-              </div>
-            )}
-    </div>
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Ingredients:</h3>
+            <ul>
+              {ingredients.map((ingredients, index) => (<li key={index}>{ingredients}</li>))}
+            </ul>
+            <br></br>
+            <h3>Instructions:</h3>
+            <ol>
+              {instructions.map((instructions, index) => (<li key={index}>{instructions}</li>))}
+            </ol>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

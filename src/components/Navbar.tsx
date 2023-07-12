@@ -33,9 +33,14 @@ export default function Navbar() {
 
   return (
     <div className="Navbar">
-      <div>
+      <div className="logoContainer">
         <a href='/main' className="mixMatchLink">
-          <h1>MixMatch</h1>
+          {/* <h1>MixMatch</h1> */}
+          <img
+            src="https://gcdnb.pbrd.co/images/4lVNPWUjg0ye.png?o=1"
+            alt="MixMatch"
+            className="logo"
+          />
         </a>
       </div>
       <div>
@@ -51,10 +56,10 @@ export default function Navbar() {
         </form>
       </div>
       <div>
-        <button onClick={() => navigate("/favorites")} className="navButton"><FaHeart style={{ color: 'red', fontSize: '16px', verticalAlign: 'middle' }}/> <span className="buttonText" style={{verticalAlign: 'middle' }}>Favorites</span></button>
+        <button onClick={() => navigate("/favorites")} className="navButton"><FaHeart style={{ color: '#FFB1A5', fontSize: '25px', verticalAlign: 'middle', marginRight: '8px' }}/> <span className="buttonText" style={{verticalAlign: 'middle' }}>Favorites</span></button>
       </div>
       <div>
-        <button onClick={() => navigate("/popular")} className="navButton">< BiSolidDrink style={{ fontSize: '16px', verticalAlign: 'middle' }}/><span className="buttonText" style={{verticalAlign: 'middle' }}>Popular Cocktails</span></button>
+        <button onClick={() => navigate("/popular")} className="navButton">< BiSolidDrink style={{ fontSize: '25px', verticalAlign: 'middle', marginRight: '8px' }}/><span className="buttonText" style={{verticalAlign: 'middle' }}>Popular Cocktails</span></button>
       </div>
       <div>
       {isLoggedIn ? (
