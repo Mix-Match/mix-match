@@ -75,6 +75,7 @@ export const addSavedDrink = async (
   next: NextFunction
 ) => {
   const { name, image, drinkid } = req.body;
+  console.log(req.body)
 
   // const userId = getUserIdFromToken(req);
   const { userId } = req.body;
