@@ -24,8 +24,19 @@ export default function Main() {
   // pointer to load next 10 drinks
   // const pointer = useRef(0);
 
-  useEffect(() => {
+  useEffect( () => {
     setIsLoading(true);
+
+    if (!formData) {
+      fetch('https://www.thecocktaildb.com/api/json/v2/9973533/latest.php', {
+        method: "GET",
+      })
+      .then((response) => response.json())
+      .then(data => {
+        setCardsData(data.drinks)
+      })
+    }
+    else {
     fetch(
       `https://www.thecocktaildb.com/api/json/v2/${9973533}/filter.php?i=${formData.liquor}`,
       {
@@ -60,9 +71,29 @@ export default function Main() {
       .catch((error) => {
         console.error("Error:", error);
       });
+    }
   }, [formData]);
 
-  return (
+  // return (
+  //   <div className="cardDisplay">
+  //     {!cardsData.length ? (
+  //       <div>Enter a liquor to get some recommendations!</div>
+  //     ) : (
+  //       <div className="card">
+  //         {cardsData.map((drink, index) => (
+  //           <DrinkCard
+  //             key={index}
+  //             name={drink.strDrink}
+  //             imgUrl={drink.strDrinkThumb}
+  //             id={drink.idDrink}
+  //           />
+  //         ))}
+  //       </div>
+  //     )}
+  //   </div>
+  // );
+
+    return (
     <div className="cardDisplay">
       {cardsData.map((drink, index) => (
         <div key={index} className="card">
@@ -73,20 +104,6 @@ export default function Main() {
           />
         </div>
       ))}
-      {/* {formData.liquor ? (
-        <div>Input a liquor to see Results</div>
-      ) : (
-        <div className="card">
-          {cardsData.map((drink, index) => (
-            <DrinkCard
-              key={index}
-              name={drink.strDrink}
-              imgUrl={drink.strDrinkThumb}
-              id={drink.idDrink}
-            />
-          ))}
-        </div>
-      )} */}
     </div>
   );
 }

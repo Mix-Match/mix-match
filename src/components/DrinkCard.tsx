@@ -8,6 +8,7 @@ interface DrinkCardProps {
   id: string;
 }
 
+
 interface DrinkDetails {
   quantity?: string | number;
   ingredient: string;
@@ -16,7 +17,8 @@ interface DrinkDetails {
 const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
   // handleSubmit: send fetch request to backend with drinkId
   const [showModal, setShowModal] = useState(false);
-  const [instructions, setInstructions] = useState<string[]>([]);
+  const [ingredients, setIngredients] = useState<string[]>([]);
+  const [instructions, setInstructions] = useState("");
   const [favorited, setFavorited] = useState(false);
 
   const handleSubmit = async () => {
@@ -26,22 +28,25 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
       const drink = data.drinks[0];
       
       const details: DrinkDetails[] = [];
+
       // while loop to pull ingredients + quantity
       let ingNum = 1;
-      
       while (drink[`strIngredient${ingNum}`]) {
-        details.push({
-          quantity: drink[`strMeasure${ingNum}`],
-          ingredient: drink[`strIngredient${ingNum}`]
-        })
+        const drinkObj: drinkDetails = {
+          ingredients: drink[`strIngredient${ingNum}`]
+        };
+        // check if corresponding measurement !== null; if exists, add to obj
+        // TODO: logic to check if 
+        if (drink[`strMeasure${ingNum}`]) drinkObj.quantity = drink[`strMeasure${ingNum}`];
+        details.push(drinkObj);
         ingNum++
       }
 
-      console.log(data.drinks);
-      console.log(details);
+      // reassign ingredients; TODO: logic to clean up ingredients (e.g. trim + concat(' '))
+      setIngredients(details.map((detail) => detail.quantity ? detail.quantity + detail.ingredients : detail.ingredients));
 
-      setInstructions(details.map((detail) => drink.strInstructions + 
-      detail.quantity + detail.ingredient));
+      // TODO: logic to clean up instructions (e.g. line breaks before '1. ')
+      setInstructions(drink.strInstructions);
 
       setShowModal(true);
     } catch (error) {
@@ -56,7 +61,7 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         name: name,
-        drinkId: id,
+        drinkid: id,
         image: imgUrl
       })
     })
@@ -86,10 +91,12 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
                   </span>
                   <h2>{name} Instructions</h2>
                   <ul>
-                    {instructions.map((instruction, index) => (
-                      <li key={index}>{instruction}</li>
+                    {ingredients.map((ingredients, index) => (
+                      <li key={index}>{ingredients}</li>
                     ))}
                   </ul>
+                  <b></b>
+                  <div>{instructions}</div>
                 </div>
               </div>
             )}
