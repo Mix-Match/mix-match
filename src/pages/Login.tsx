@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [validLogin, setValidLogin] = useState<boolean | null>(null);
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -17,9 +18,12 @@ export default function Login() {
       body: JSON.stringify({ username, password }),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data))
       .then((userData) => {
-        if (userData !== undefined) {
+        console.log('user data:', userData)
+        console.log('user data error: ', userData.error)
+        if (userData.error) setValidLogin(false)
+        else {
+          localStorage.setItem('user', JSON.stringify(userData));
           navigate('/main', { state: { user: userData, isLogged: true } });
         }
       })
@@ -37,9 +41,9 @@ export default function Login() {
   };
 
   return (
-    <div className='login1'>
+    <div className='loginOuter'>
       <div className="login">
-        <h1>Login</h1>
+        <h1 className='formHeader'>Login</h1>
         <form onSubmit={handleSubmit}>
           <div>
             <div>
@@ -59,11 +63,12 @@ export default function Login() {
               />
             </div>
           </div>
-          <button type="submit">
+          <button type="submit" className="formSubmit">
               Login
             </button>
+            {validLogin === false ? <div className="invalidMessage">Invalid Username or Password</div> : <></>}
         </form>
-        <button onClick={() => navigate('/signup')}>Sign Up Page</button>
+        <a className="form-redirect" onClick={() => navigate('/signup')}>Create an Account</a>
       </div>
     </div>
   );

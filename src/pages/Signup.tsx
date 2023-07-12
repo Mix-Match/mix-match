@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Signup() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [validLogin, setValidLogin] = useState<boolean | null>(null);
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -16,12 +17,13 @@ export default function Signup() {
       },
       body: JSON.stringify({ username, password }),
     })
-      .then((response) => {
-        console.log(response);
-        response.json()
-      })
+      .then((response) => response.json())
       .then((userData) => {
-        navigate('/main', { state: { user: userData, isLogged: true } });
+        console.log('user data: ', userData)
+        if (userData.error) setValidLogin(false);
+        else {
+          navigate('/main', { state: { user: userData, isLogged: true } });
+        }
       })
       .catch((error) => {
         console.log('Error:', error);
@@ -38,9 +40,9 @@ export default function Signup() {
   };
 
   return (
-    <div className='signup1'>
+    <div className='signupOuter'>
       <div className="signup">
-        <h1>Signup</h1>
+        <h1 className='formHeader'>Sign Up</h1>
         <form onSubmit={handleSubmit}>
           <div>
             <div>
@@ -60,11 +62,10 @@ export default function Signup() {
               />
             </div>
           </div>
-          <button type="submit">
-              Signup
-            </button>
+          <button type="submit" className='formSubmit'>Sign up</button>
+          {validLogin === false ? <div className="invalidMessage">Invalid Username or Password</div> : <></>}
         </form>
-        <button onClick={() => navigate('/')}>Login Page</button>
+        <a className="form-redirect" onClick={() => navigate('/')}>Login</a>
       </div>
     </div>
   );

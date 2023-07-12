@@ -1,40 +1,27 @@
 import { useLocation } from "react-router-dom";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import DrinkCard from "../components/DrinkCard";
 
 interface Drink {
-  idDrink: string;
-  strDrink: string;
-  strDrinkThumb: string;
+  drinkid: string;
+  name: string;
+  image: string;
 }
 
 export default function Favorites() {
   const formData = useLocation().state;
   const [isLoading, setIsLoading] = useState(true);
   const [cardsData, setCardsData] = useState<Drink[]>([]);
+  const [userFavorites, setUserFavorites] = useState<string[]>([]);
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(
-      `/api/drinks`,
-      {
-        method: "GET",
-      }
-    )
+    fetch(`/drinks`, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
-        setCardsData([]);
-
-      //   {
-      //     "id": 5,
-      //     "name": "Bijou",
-      //     "image": "https://www.thecocktaildb.com/images/media/drink/vaukir1606772580.jpg",
-      //     "userid": 2,
-      //     "drinkid": "17254"
-      // }
-        
-        setCardsData(data.drinks);
-
+        console.log('data: ', data)
+        setCardsData(data);
+        setUserFavorites(data.map((favorite: Drink) => favorite.drinkid))
         setIsLoading(false);   
       })
       .catch((error) => {
@@ -42,14 +29,23 @@ export default function Favorites() {
       });
   }, [formData]);
 
+  const updateFavorites = (drinkid: string, isFavorite: boolean) => {
+    setUserFavorites((prevFavorites) => {
+      if (isFavorite) return [...prevFavorites, drinkid];
+      else return prevFavorites.filter((id) => id !== drinkid);
+    });
+  };
+
   return (
     <div className="cardDisplay">
       {cardsData.map((drink, index) => (
         <div key={index} className="card">
           <DrinkCard
-            name={drink.strDrink}
-            imgUrl={drink.strDrinkThumb}
-            id={drink.idDrink}
+            name={drink.name}
+            imgUrl={drink.image}
+            id={drink.drinkid}
+            favorite={userFavorites.includes(drink.drinkid)}
+            updateFavorites={updateFavorites}
           />
         </div>
       ))}

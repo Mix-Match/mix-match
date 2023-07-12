@@ -3,9 +3,11 @@ import { pool } from '../server';
 import jwt from 'jsonwebtoken';
 
 const getUserIdFromToken = (req: Request): number | null => {
-  const authorizationHeader = req.headers.authorization;
-  if (authorizationHeader) {
-    const token = authorizationHeader?.split(' ')[1];
+  const token = req.cookies.token;
+  console.log(token);
+  // const authorizationHeader = req.headers.authorization;
+  if (token) {
+    // const token = authorizationHeader?.split(' ')[1];
     const decodedToken = jwt.decode(token) as { userId: number } | null;
     return decodedToken?.userId || null;
   } else {
@@ -77,8 +79,8 @@ export const addSavedDrink = async (
   const { name, image, drinkid } = req.body;
   console.log(req.body)
 
-  // const userId = getUserIdFromToken(req);
-  const { userId } = req.body;
+  const userId = getUserIdFromToken(req);
+  // const { userId } = req.body;
 
   if (!userId) {
     return res.redirect('/auth/login');
@@ -86,16 +88,30 @@ export const addSavedDrink = async (
 
   // TODO: wrap next part in a conditions to check if decodedToken.userId exists:
   // TODO: modularize JWT/userId functionality to use in the delete drink middleware.
-  const values = [name, image, userId, drinkid];
-  const text = `
-    INSERT INTO
-      favorites (name, image, userid, drinkid)
-    VALUES
-      ($1,$2,$3,$4)
-    RETURNING *
-    `;
 
   try {
+    const checkQuery = `
+      SELECT *
+      FROM favorites
+      WHERE drinkid = $1 AND userid = $2
+    `;
+    const checkValues = [drinkid, userId];
+    const checkResult = await pool.query(checkQuery, checkValues);
+
+    if (checkResult.rowCount > 0) {
+      // Drink already exists, do nothing
+      return next();
+    }
+
+    const values = [name, image, userId, drinkid];
+    const text = `
+      INSERT INTO
+        favorites (name, image, userid, drinkid)
+      VALUES
+        ($1,$2,$3,$4)
+      RETURNING *
+    `;
+
     const result = await pool.query(text, values);
     console.log('INSERTED', result.rows);
     return next();
@@ -116,8 +132,8 @@ export const deleteSavedDrink = async (
   const { name } = req.body;
   console.log('file: drinksController.ts:108 | name:', name)
 
-  // const userId = getUserIdFromToken(req);
-  const { userId } = req.body;
+  const userId = getUserIdFromToken(req);
+  // const { userId } = req.body;
 
   if (!userId) {
     return res.redirect('/auth/login');
@@ -149,8 +165,8 @@ export const getSavedDrinks = async (
   res: Response,
   next: NextFunction
 ) => {
-  // const userId = getUserIdFromToken(req);
-  const { userId } = req.body;
+  const userId = getUserIdFromToken(req);
+  // const { userId } = req.body;
 
   const values = [userId];
 
@@ -164,10 +180,11 @@ export const getSavedDrinks = async (
     const result = await pool.query(text, values);
     console.log(result);
     const { rows } = result;
-    res.json(rows);
+    // res.json(rows);
+    return res.status(200).json(rows)
   } catch (err) {
     return next({
-      log: 'drinksController.getSavedDrinks: ERROR: Database error',
+      log: `${err} in drinksController.getSavedDrinks: ERROR: Database error`,
     });
   }
 };
