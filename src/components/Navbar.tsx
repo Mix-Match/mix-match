@@ -32,6 +32,12 @@ export default function Navbar() {
         </form>
       </div>
       <div>
+        <button onClick={() => navigate("/favorites")}>Favorites</button>
+      </div>
+      <div>
+        <button onClick={() => navigate("/popular")}>Popular Cocktails</button>
+      </div>
+      <div>
         <button onClick={() => navigate("/")}>Login or Sign Up</button>
       </div>
     </div>
