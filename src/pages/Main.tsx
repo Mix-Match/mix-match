@@ -95,16 +95,15 @@ export default function Main() {
 
     return (
     <div className="cardDisplay">
-        <div className="card">
-          {cardsData.map((drink, index) => (
-            <DrinkCard
-              key={index}
-              name={drink.strDrink}
-              imgUrl={drink.strDrinkThumb}
-              id={drink.idDrink}
-            />
-          ))}
+      {cardsData.map((drink, index) => (
+        <div key={index} className="card">
+          <DrinkCard
+            name={drink.strDrink}
+            imgUrl={drink.strDrinkThumb}
+            id={drink.idDrink}
+          />
         </div>
+      ))}
     </div>
   );
 }

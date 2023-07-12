@@ -17,8 +17,11 @@ export default function Login() {
       body: JSON.stringify({ username, password }),
     })
       .then((response) => response.json())
+      .then((data) => console.log(data))
       .then((userData) => {
-        navigate('/main', { state: { user: userData, isLogged: true } });
+        if (userData !== undefined) {
+          navigate('/main', { state: { user: userData, isLogged: true } });
+        }
       })
       .catch((error) => {
         console.error('Error:', error);
