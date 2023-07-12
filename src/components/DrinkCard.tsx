@@ -8,7 +8,7 @@ interface DrinkCardProps {
 
 interface drinkDetails {
   quantity?: string | number,
-  ingredient: string
+  ingredients: string
 }
 
 const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
@@ -24,19 +24,24 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
       const drink = data.drinks[0];
       
       const details: drinkDetails[] = [];
+
       // while loop to pull ingredients + quantity
       let ingNum = 1;
-      
       while (drink[`strIngredient${ingNum}`]) {
-        details.push({
-          quantity: drink[`strMeasure${ingNum}`],
-          ingredient: drink[`strIngredient${ingNum}`]
-        })
+        const drinkObj: drinkDetails = {
+          ingredients: drink[`strIngredient${ingNum}`]
+        };
+        // check if corresponding measurement !== null; if exists, add to obj
+        // TODO: logic to check if 
+        if (drink[`strMeasure${ingNum}`]) drinkObj.quantity = drink[`strMeasure${ingNum}`];
+        details.push(drinkObj);
         ingNum++
       }
-      setIngredients(details.map((detail) => 
-      detail.quantity + detail.ingredient));
 
+      // reassign ingredients; TODO: logic to clean up ingredients (e.g. trim + concat(' '))
+      setIngredients(details.map((detail) => detail.quantity ? detail.quantity + detail.ingredients : detail.ingredients));
+
+      // TODO: logic to clean up instructions (e.g. line breaks before '1. ')
       setInstructions(drink.strInstructions);
 
       setShowModal(true);
