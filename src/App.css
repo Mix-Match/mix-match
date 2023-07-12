@@ -2,11 +2,6 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities'; */
 
-@font-face {
-  font-family: 'GlassAntiqua-Regular';
-  src: url('./fonts/GlassAntiqua-Regular.ttf') format('truetype'),
-}
-
 :root {
   --main-color: #333438;
 }
