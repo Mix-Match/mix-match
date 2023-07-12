@@ -23,7 +23,7 @@ export default function Signup() {
         if (userData.error) setValidLogin(false);
         else {
           localStorage.setItem('user', JSON.stringify(userData));
-          navigate('/main', { state: { user: userData, isLogged: true } });
+          navigate('/popular', { state: { user: userData, isLogged: true } });
         }
       })
       .catch((error) => {
