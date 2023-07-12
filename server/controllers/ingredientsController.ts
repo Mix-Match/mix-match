@@ -1,12 +1,11 @@
 import axios from 'axios';
-import { Pool } from 'pg';
 import { Request, Response } from 'express';
+import { pool } from '../server';
 
 const cocktailDB = `https://www.thecocktaildb.com/api/json/v2/${process.env.COCKTAILDB_APIKEY}/list.php?`;
 
 // Endpoint for refreshing ingredients
 export const refreshIngredients = async (
-  pool: Pool,
   req: Request,
   res: Response
 ) => {
@@ -38,7 +37,6 @@ export const refreshIngredients = async (
 
 // Retrieve all ingredients from the database
 export const getAllIngredients = async (
-  pool: Pool,
   req: Request,
   res: Response
 ) => {

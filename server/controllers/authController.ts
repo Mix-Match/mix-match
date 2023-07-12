@@ -1,10 +1,11 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
+import { pool } from '../server';
 require('dotenv').config();
 
 // Controller function for user signup
-export const signup = async (req: Request, res: Response, pool: any) => {
+export const signup = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     console.log('file: authController.ts:13 | signup | password:', password);
@@ -30,7 +31,7 @@ export const signup = async (req: Request, res: Response, pool: any) => {
 };
 
 // Controller function for user login
-export const login = async (req: Request, res: Response, pool: any) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
 
@@ -57,6 +58,7 @@ export const login = async (req: Request, res: Response, pool: any) => {
 
     // Generate JWT token
     const token = jwt.sign({ userId: user.userid }, `${process.env.SECRET_KEY}`);
+    res.cookie('token', token, { httpOnly: true });
 
     // Send token as a response
     res.json({ token });
@@ -65,3 +67,11 @@ export const login = async (req: Request, res: Response, pool: any) => {
     res.status(500).json({ error: 'Failed to login' });
   }
 };
+
+
+// Controller function for user logout
+export const logout = async (req: Request, res: Response) => {
+  res.clearCookie('token');
+  res.json({ message: 'Signout successful' });
+};
+

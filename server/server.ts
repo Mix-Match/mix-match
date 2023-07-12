@@ -2,9 +2,9 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { Pool } from 'pg';
-import router from './routes/drinkRoutes';
-import authRoutes from './routes/authRoutes';
-import ingredientsRoutes from './routes/ingredientRoutes';
+import drinkRouter from './routes/drinkRoutes';
+import authRouter from './routes/authRoutes';
+import ingredientsRouter from './routes/ingredientRoutes';
 // import { getDrinksByLiquor, getInstructionsById } from './controllers/drinksController';
 // import axios from 'axios';
 // import path from 'path';
@@ -34,11 +34,11 @@ app.use(express.json()); // Parse JSON request bodies
 app.use(bodyParser.json()); // Parse URL-encoded request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// define route handlers
-app.use('/api', router);
 
-app.use('/api/ingredients', ingredientsRoutes(pool));
-app.use('/api/auth', authRoutes(pool));
+// define route handlers
+app.use('/drinks', drinkRouter);
+app.use('/ingredients', ingredientsRouter);
+app.use('/auth', authRouter);
 
 // Catch-all error handler
 
