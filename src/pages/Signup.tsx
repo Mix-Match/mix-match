@@ -16,12 +16,15 @@ export default function Signup() {
       },
       body: JSON.stringify({ username, password }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        response.json()
+      })
       .then((userData) => {
         navigate('/main', { state: { user: userData, isLogged: true } });
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.log('Error:', error);
       });
   }
 
