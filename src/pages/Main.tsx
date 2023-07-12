@@ -34,6 +34,7 @@ export default function Main() {
     )
       .then((response) => response.json())
       .then((data) => {
+        // console.log(data);
         setCardsData([]);
         
         // // console.log(data.drinks)
@@ -47,7 +48,8 @@ export default function Main() {
         // setCardsData(randomDrinks)
 
         // temp: return first 10 results
-        const testDrinks = data.drinks.slice(0, 10);
+        // const testDrinks = data.drinks.slice(0, 10);
+        const testDrinks = data.drinks
         setCardsData(testDrinks);
 
 
@@ -61,8 +63,18 @@ export default function Main() {
   }, [formData]);
 
   return (
-    <div>
-      {formData.liquor ? (
+    <div className="cardDisplay">
+      <div className="card">
+          {cardsData.map((drink, index) => (
+            <DrinkCard
+              key={index}
+              name={drink.strDrink}
+              imgUrl={drink.strDrinkThumb}
+              id={drink.idDrink}
+            />
+          ))}
+        </div>
+      {/* {formData.liquor ? (
         <div>Input a liquor to see Results</div>
       ) : (
         <div className="card">
@@ -75,7 +87,7 @@ export default function Main() {
             />
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }
