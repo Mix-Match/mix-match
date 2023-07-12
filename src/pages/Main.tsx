@@ -21,11 +21,22 @@ export default function Main() {
   const formData = useLocation().state;
   const [isLoading, setIsLoading] = useState(true);
   const [cardsData, setCardsData] = useState<Drink[]>([]);
+  const [userFavorites, setUserFavorites] = useState<string[]>([]);
   // pointer to load next 10 drinks
   // const pointer = useRef(0);
 
   useEffect( () => {
     setIsLoading(true);
+
+    fetch('/drinks', { method: 'GET' })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+        setUserFavorites(data.map((favorite) => favorite.drinkid))
+      })
+      .catch((error) => {
+        console.log('Error:', error)
+      });
 
     if (!formData) {
       fetch('https://www.thecocktaildb.com/api/json/v2/9973533/latest.php', {
@@ -33,20 +44,25 @@ export default function Main() {
       })
       .then((response) => response.json())
       .then(data => {
-        setCardsData(data.drinks)
+        console.log(data.drinks); // Check the value of data.drinks
+        const drinks = data.drinks === 'None Found' ? [] : data.drinks;
+        setCardsData(drinks);
+        setIsLoading(false);
       })
     }
     else {
     fetch(
-      `https://www.thecocktaildb.com/api/json/v2/${9973533}/filter.php?i=${formData.liquor}`,
-      {
+      `https://www.thecocktaildb.com/api/json/v2/${9973533}/filter.php?i=${formData.liquor}`, {
         method: "GET",
-      }
-    )
+      })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.drinks); // Check the value of data.drinks
+        const drinks = data.drinks === 'None Found' ? [] : data.drinks;
+        setCardsData(drinks);
+        setIsLoading(false);
         // console.log(data);
-        setCardsData([]);
+        // setCardsData([]);
         
         // // console.log(data.drinks)
         // // pointer.current = pointer.current += 10;
@@ -60,12 +76,12 @@ export default function Main() {
 
         // temp: return first 10 results
         // const testDrinks = data.drinks.slice(0, 10);
-        const testDrinks = data.drinks
-        setCardsData(testDrinks);
+        // const testDrinks = data.drinks
+        // setCardsData(testDrinks);
 
 
         // setCardsData(data.drinks);
-        setIsLoading(false);
+        // setIsLoading(false);
         
       })
       .catch((error) => {
@@ -93,17 +109,31 @@ export default function Main() {
   //   </div>
   // );
 
-    return (
+  const updateFavorites = (drinkid: string, isFavorite: boolean) => {
+    setUserFavorites((prevFavorites) => {
+      if (isFavorite) return [...prevFavorites, drinkid];
+      else return prevFavorites.filter((id) => id !== drinkid);
+    })
+  }
+
+  return (
     <div className="cardDisplay">
-      {cardsData.map((drink, index) => (
-        <div key={index} className="card">
-          <DrinkCard
-            name={drink.strDrink}
-            imgUrl={drink.strDrinkThumb}
-            id={drink.idDrink}
-          />
-        </div>
-      ))}
+      {cardsData.length > 0 ? (
+        cardsData.map((drink, index) => (
+          <div key={index} className="card">
+            <DrinkCard
+              name={drink.strDrink}
+              imgUrl={drink.strDrinkThumb}
+              id={drink.idDrink}
+              favorite={userFavorites.includes(drink.idDrink)}
+              updateFavorites={updateFavorites}
+            />
+          </div>
+        ))
+      ) : (
+        <div>Loading...</div>
+      )}
     </div>
   );
+  
 }

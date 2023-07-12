@@ -11,6 +11,15 @@ export const signup = async (req: Request, res: Response) => {
     console.log('file: authController.ts:13 | signup | password:', password);
     console.log('file: authController.ts:13 | signup | username:', username);
 
+    // Check if the user already exists
+    const checkUserQuery = 'SELECT * FROM users WHERE username = $1';
+    const userExists = await pool.query(checkUserQuery, [username]);
+    if (userExists.rows.length > 0) {
+      // User already exists, send error response
+      return res.status(409).json({ error: 'User already exists' });
+    }
+    console.log('user exists: ', userExists)
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -19,10 +28,28 @@ export const signup = async (req: Request, res: Response) => {
     // Values to be substituted in query
     const values = [username, hashedPassword];
     // Execute query using database connection pool
-    await pool.query(query, values);
+    const result = await pool.query(query, values);
+
+    // Extract user object from query result
+    const user = result.rows[0];
+
+
+    // // Retrieve user from database
+    // const query1 = 'SELECT * FROM users WHERE username = $1';
+    // // Values to be substituted in query
+    // const values1 = [username];
+    // // Execute query using database connection pool and await the result
+    // const result = await pool.query(query1, values1);
+    // Generate JWT token
+    
+    // Generate JWT token
+    const token = jwt.sign({ userId: user.userid }, `${process.env.SECRET_KEY}`);
+    // Send token as a response
+    res.cookie('token', token, { httpOnly: true });
+    res.json({ token });
 
     // Send success response
-    res.json({ message: 'Signup successful' });
+    // res.json({ message: 'Signup successful' });
   } catch (error) {
     console.error('Signup failed:', error);
     // Send error response
@@ -71,7 +98,12 @@ export const login = async (req: Request, res: Response) => {
 
 // Controller function for user logout
 export const logout = async (req: Request, res: Response) => {
-  res.clearCookie('token');
-  res.json({ message: 'Signout successful' });
+  try {
+    res.clearCookie('token');
+    res.json({ message: 'Signout successful' });
+  } catch (error) {
+    console.error('Logout failed:', error);
+    res.status(500).json({ error: 'Failed to logout' });
+  }
 };
 

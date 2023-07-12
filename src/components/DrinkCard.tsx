@@ -6,20 +6,21 @@ interface DrinkCardProps {
   name: string;
   imgUrl: string;
   id: string;
+  favorite: boolean;
+  updateFavorites?
 }
 
 
 interface DrinkDetails {
   quantity?: string | number;
-  ingredient: string;
+  ingredients: string;
 }
 
-const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
+const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id, favorite, updateFavorites }) => {
   // handleSubmit: send fetch request to backend with drinkId
   const [showModal, setShowModal] = useState(false);
   const [ingredients, setIngredients] = useState<string[]>([]);
-  const [instructions, setInstructions] = useState("");
-  const [favorited, setFavorited] = useState(false);
+  const [instructions, setInstructions] = useState<string[]>([]);
 
   const handleSubmit = async () => {
     try {
@@ -32,21 +33,33 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
       // while loop to pull ingredients + quantity
       let ingNum = 1;
       while (drink[`strIngredient${ingNum}`]) {
-        const drinkObj: drinkDetails = {
-          ingredients: drink[`strIngredient${ingNum}`]
+        const drinkObj: DrinkDetails = {
+          ingredients: drink[`strIngredient${ingNum}`].trim()
         };
         // check if corresponding measurement !== null; if exists, add to obj
-        // TODO: logic to check if 
-        if (drink[`strMeasure${ingNum}`]) drinkObj.quantity = drink[`strMeasure${ingNum}`];
+        if (drink[`strMeasure${ingNum}`]) drinkObj.quantity = drink[`strMeasure${ingNum}`].trim();
         details.push(drinkObj);
         ingNum++
       }
 
-      // reassign ingredients; TODO: logic to clean up ingredients (e.g. trim + concat(' '))
-      setIngredients(details.map((detail) => detail.quantity ? detail.quantity + detail.ingredients : detail.ingredients));
+      setIngredients(details.map((detail) => detail.quantity ? `${detail.quantity} ${detail.ingredients}` : `${detail.ingredients}`));
 
-      // TODO: logic to clean up instructions (e.g. line breaks before '1. ')
-      setInstructions(drink.strInstructions);
+      // TODO: refactor to account for edge cases: "Dr. Pepper", "Step (num)"
+      const convert: string[] = [];
+
+      // fix inconsistent line breaks from returned instructions
+      const test = drink.strInstructions.replace(/(?:\r\n|\r|\n)/g, " ")
+      
+      // fix inconsistent capitalization, numbering, punctuation + break instructions out into arr elements
+      test.split(". ").forEach((e: string, i: number) => {
+        e.trim();
+        const first = e[0].toUpperCase();
+        const last = e[e.length - 1];
+        const output = !last.match(/^([a-z\(\)]+)$/i) ? first + e.slice(1, e.length - 1) : first + e.slice(1);
+        if (e) convert.push(`${output}.`)
+      })
+
+      setInstructions(convert);
 
       setShowModal(true);
     } catch (error) {
@@ -55,9 +68,9 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
   }
 
   const favSubmit = async () => {
-    const favoriteRoute = favorited ? '/save' : '/delete';
-    await fetch(favoriteRoute, {
-      method: 'POST',
+    const favoriteMethod = favorite ? 'DELETE' : 'POST';
+    await fetch('/drinks', {
+      method: favoriteMethod,
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         name: name,
@@ -65,7 +78,7 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
         image: imgUrl
       })
     })
-    setFavorited(true);
+    updateFavorites(id, !favorite)
   }
 
   const closeModal = () => {
@@ -80,7 +93,7 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
       onClick={() => handleSubmit()}
       >Instructions</button>
       <button id='heart' onClick={() => favSubmit()}>
-        {favorited ? <FaHeart className='favorite'/> : <FaHeart className='notFavorite'/>}
+        {favorite ? <FaHeart className='favorite heartIcon'/> : <FaHeart className='notFavorite heartIcon'/>}
       </button>
 
       {showModal && (
@@ -89,14 +102,19 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
                   <span className="close" onClick={closeModal}>
                     &times;
                   </span>
-                  <h2>{name} Instructions</h2>
+                  <h3>Ingredients:</h3>
                   <ul>
                     {ingredients.map((ingredients, index) => (
                       <li key={index}>{ingredients}</li>
                     ))}
                   </ul>
                   <b></b>
-                  <div>{instructions}</div>
+                  <h3>Instructions:</h3>
+                  <ol>
+                    {instructions.map((instructions, index) => (
+                      <li key={index}>{instructions}</li>
+                    ))}
+                  </ol>
                 </div>
               </div>
             )}

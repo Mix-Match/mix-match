@@ -2,49 +2,126 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities'; */
 
+:root {
+  --main-color: #333438;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.mixMatchLink {
+  text-decoration: none;
+  color: var(--main-color)
+}
+/* NAVBAR STYLING */
 .Navbar {
   display: flex;
   align-items: center;
   justify-content:space-evenly;
   outline: red solid 1px;
   height: 100px;
+  background-color: #FFB1A5;
 }
 
-.login1 {
+@media (max-width: 1000px) {
+  .Navbar {
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+  }
+}
+
+.customInput {
+  border-radius: 8px;
+  border: 0px solid #fdfdfd;
+  padding: 1rem;
+  box-shadow: -4px 7px 10px 0px rgba(0,0,0,0.1);
+}
+
+.customInput::placeholder {
+  font-family: Inter,sans-serif;
+  font-size: 16px;
+}
+
+.navButton {
+  align-items: center;
+  justify-content: center;
+  vertical-align: 'middle';
+  background-color: #ffcc99;
+  padding: 0 25px;
+  cursor: pointer;
+  font-family: Inter,sans-serif;
+  border: 0px solid #fdfdfd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 16px;
+  height: 48px;
+  box-shadow: -4px 7px 10px 0px rgba(0,0,0,0.1);
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+
+/* LOGIN/SIGNUP STYLING */
+.formHeader {
+  font-size: 45px;
+}
+.loginOuter, .signupOuter {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   outline: red solid 1px;
   height: 800px;
-  width: 100vw;
+  width: 100%;
 }
 
-.login {
+.login, .signup{
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  outline: red solid 1px;
+  outline: #ededed solid 3px;
+  padding: 40px 50px;
+  text-align: center;
+  border-radius: 5px;
+  background-color: #fcfcfc;
+  box-shadow: -4px 7px 10px 0px rgba(0,0,0,0.1);
+  color: var(--main-color)
 }
 
-.signup1 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  outline: red solid 1px;
-  height: 800px;
-  width: 100vw;
+.invalidMessage {
+  color: brown;
+  font-size: 14px;
+  font-style: italic;
+  margin-bottom: 5px;
 }
 
-.signup {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.signup input, .login input {
+  padding: 7px 5px 7px 15px;
+  margin-bottom: 6px;
+  font-size: 20px;
+  line-height: 25px;
+  border-radius: 6px;
 }
 
+.formSubmit {
+  margin: 8px 0;
+  width: 100%;
+  padding: 8px 1px;
+  border-radius: 6px;
+  font-size: 24px;
+  color: var(--main-color)
+}
+
+.form-redirect {
+  font-size: 20px;
+  text-decoration: underline;
+  color: rgb(23, 23, 192);
+  margin-top: 10px;
+}
+
+/* CARD STYLING */
 .cardDisplay {
   display: flex;
   flex-wrap: wrap;
@@ -59,32 +136,35 @@
   margin: 5px;
   padding-left: 15px;
   flex-basis: calc(25% - 10px); /* Adjust the percentage as needed */
-}
-
-#heart {
-  border: none !important;
-  background-color: transparent;
-}
-
-.notFavorite {
-  color: red; /* Outline color */
-  fill: white; /* Fill color */
-  stroke-width: 30px; 
-  font-size: 30px;
-  margin-top: 15px;
-}
-
-.notFavorite:hover {
-  fill: red;
-  transition: all 0.3s ease-in-out;
-}
-
-.favorite {
-  fill: red;
-  font-size: 30px;
+  text-align: center;
 }
 
 .card img {
   height: 200px;
   width: 300px;
+}
+
+
+/* FAVORITES STYLING */
+#heart {
+  border: none !important;
+  background-color: transparent;
+}
+
+.heartIcon {
+  stroke-width: 30px; 
+  font-size: 30px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  transition: all 0.1s ease-in;
+}
+
+.notFavorite, favorite:hover {
+  color: red; /* Outline color */
+  fill: white; /* Fill color */
+}
+
+.favorite, .notFavorite:hover {
+  fill: red;
+  color: white;
 }

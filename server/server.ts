@@ -5,6 +5,7 @@ import { Pool } from 'pg';
 import drinkRouter from './routes/drinkRoutes';
 import authRouter from './routes/authRoutes';
 import ingredientsRouter from './routes/ingredientRoutes';
+const cookieParser = require('cookie-parser');
 // import { getDrinksByLiquor, getInstructionsById } from './controllers/drinksController';
 // import axios from 'axios';
 // import path from 'path';
@@ -29,6 +30,7 @@ pool.connect((err) => {
   console.log('Connected to the database.'); // Parse JSON request bodies
 });
 
+app.use(cookieParser());
 app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Parse JSON request bodies
 app.use(bodyParser.json()); // Parse URL-encoded request bodies
