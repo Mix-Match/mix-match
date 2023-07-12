@@ -8,6 +8,7 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background-color: #f0dfc8;
 }
 .mixMatchLink {
   text-decoration: none;
@@ -17,10 +18,13 @@ body {
 .Navbar {
   display: flex;
   align-items: center;
-  justify-content:space-evenly;
-  outline: red solid 1px;
+  justify-content:center;
+  gap: 40px;
+  /* outline: red solid 1px; */
   height: 100px;
   background-color: #FFB1A5;
+  margin-bottom: 10px;
+  border-radius: 5px;
 }
 
 @media (max-width: 1000px) {
@@ -28,13 +32,26 @@ body {
     flex-direction: column;
     justify-content: center;
     height: auto;
+    padding: 0 75px;
   }
+}
+
+.logoContainer{
+  /* width: 220px;
+  height: 60px; */
+}
+
+.logo {
+  /* width: 100%;
+  height: auto; */
 }
 
 .customInput {
   border-radius: 8px;
+  margin-right: 5px;
   border: 0px solid #fdfdfd;
-  padding: 1rem;
+  padding: 0 80px 0 10px;
+  height: 48px;
   box-shadow: -4px 7px 10px 0px rgba(0,0,0,0.1);
 }
 
@@ -54,13 +71,33 @@ body {
   border: 0px solid #fdfdfd;
   border-radius: 8px;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: 18px;
   height: 48px;
   box-shadow: -4px 7px 10px 0px rgba(0,0,0,0.1);
   margin-bottom: 5px;
   margin-top: 5px;
 }
 
+.instructionButton {
+  align-items: center;
+  justify-content: center;
+  vertical-align: 'middle';
+  background-color: #FFB1A5;
+  padding: 0 25px;
+  cursor: pointer;
+  font-family: Inter,sans-serif;
+  border: 0px solid #fdfdfd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 20px;
+  height: 36px;
+  box-shadow: -4px 7px 10px 0px rgba(0,0,0,0.1);
+  margin-bottom: 5px;
+  margin-top: 20px;
+}
+.instructionButton:hover {
+  mix-blend-mode: screen;
+}
 
 /* LOGIN/SIGNUP STYLING */
 .formHeader {
@@ -128,20 +165,76 @@ body {
   justify-content: center;
 }
 
+.cardName {
+  /* font-family: 'GlassAntiqua-Regular', sans-serif; */
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.cardheader {
+  display: flex;
+  /* border: red solid 0px;
+  justify-content: space-between; */
+}
+
 .card {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  padding: 10px 20px;
+  align-items: center;
   border: black solid 1px;
-  border-radius: 5px;
-  margin: 5px;
-  padding-left: 15px;
+  border-radius: 15px;
+  margin: 12px 12px;
   flex-basis: calc(25% - 10px); /* Adjust the percentage as needed */
   text-align: center;
+  /* background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%); */
+  box-shadow: -4px 7px 10px 0px rgba(0,0,0,0.1);
+  background-color: #76acaf;
 }
 
 .card img {
-  height: 200px;
+  object-fit: cover;
+  height: 300px;
   width: 300px;
+  justify-content: center;
+  border-radius: 10px;
+  border: 4px solid #ffcc99;
+}
+
+
+/* .modal {
+  display: flex;
+} */
+
+/* .modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+} */
+
+.modal ul {
+  list-style: none;
+  margin: 3px 0;
+  padding: 0;
+}
+
+.modal ol {
+  list-style-position: inside;
+  margin: 3px 0;
+  padding: 0;
+}
+
+.modal-content {
+  margin-bottom: 15px;
+}
+
+.modal h3 {
+  margin: 2px 0;
+}
+
+.close {
+  font-size: 15px;
+  margin-left: 10px; /* Adjust the font size as desired */
 }
 
 
@@ -149,6 +242,7 @@ body {
 #heart {
   border: none !important;
   background-color: transparent;
+  margin-left: 8px;
 }
 
 .heartIcon {
@@ -160,11 +254,11 @@ body {
 }
 
 .notFavorite, favorite:hover {
-  color: red; /* Outline color */
-  fill: white; /* Fill color */
+  color: #FFB1A5; /* Outline color */
+  fill:  #f0dfc8; /* Fill color */
 }
 
 .favorite, .notFavorite:hover {
-  fill: red;
-  color: white;
+  fill: #FFB1A5;
+  color: #f0dfc8;
 }

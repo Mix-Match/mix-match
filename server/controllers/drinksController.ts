@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 const getUserIdFromToken = (req: Request): number | null => {
   const token = req.cookies.token;
-  console.log(token);
+  // console.log(token);
   // const authorizationHeader = req.headers.authorization;
   if (token) {
     // const token = authorizationHeader?.split(' ')[1];
@@ -18,7 +18,7 @@ const getUserIdFromToken = (req: Request): number | null => {
 // Middleware for fetching to cocktail API, return array of objects with cocktails
 export const getDrinksByLiquor = async (req: Request, res: Response, next: NextFunction) => {
   const { liquor } = req.params; // Get the chosen liquor from the request parameters
-  console.log("🚀 ~ file: drinksController.ts:8 ~ getDrinksByLiquor ~ liquor:", liquor)
+  // console.log("🚀 ~ file: drinksController.ts:8 ~ getDrinksByLiquor ~ liquor:", liquor)
   const url = `https://www.thecocktaildb.com/api/json/v2/${process.env.COCKTAILDB_APIKEY}/filter.php?i=${liquor}`
   
   const payload = {
@@ -77,7 +77,7 @@ export const addSavedDrink = async (
   next: NextFunction
 ) => {
   const { name, image, drinkid } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
 
   const userId = getUserIdFromToken(req);
   // const { userId } = req.body;
@@ -113,7 +113,7 @@ export const addSavedDrink = async (
     `;
 
     const result = await pool.query(text, values);
-    console.log('INSERTED', result.rows);
+    // console.log('INSERTED', result.rows);
     return next();
   } catch (err) {
     return next({
@@ -130,7 +130,7 @@ export const deleteSavedDrink = async (
   next: NextFunction
 ) => {
   const { name } = req.body;
-  console.log('file: drinksController.ts:108 | name:', name)
+  // console.log('file: drinksController.ts:108 | name:', name)
 
   const userId = getUserIdFromToken(req);
   // const { userId } = req.body;
@@ -140,7 +140,7 @@ export const deleteSavedDrink = async (
   }
 
   const values = [name, userId];
-  console.log('file: drinksController.ts:118 | values:', values)
+  // console.log('file: drinksController.ts:118 | values:', values)
 
   const text = `
     DELETE FROM favorites
@@ -149,7 +149,7 @@ export const deleteSavedDrink = async (
 
   try {
     const result = await pool.query(text, values);
-    console.log('DELETED', result.rows);
+    // console.log('DELETED', result.rows);
     return next();
   } catch (err) {
     return next({
@@ -178,7 +178,7 @@ export const getSavedDrinks = async (
 
   try {
     const result = await pool.query(text, values);
-    console.log(result);
+    // console.log(result);
     const { rows } = result;
     // res.json(rows);
     return res.status(200).json(rows)
