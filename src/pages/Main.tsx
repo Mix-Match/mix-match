@@ -107,23 +107,4 @@ export default function Main() {
         </div>
     </div>
   );
-
-  // return !cardsData.length ? (
-  //   <div className="cardDisplay">
-  //       <div>Enter a liquor to get some recommendations!</div>
-  //     </div>
-  //     ) : (
-  //       <div className="cardDisplay">
-  //       <div className="card">
-  //         {cardsData.map((drink, index) => (
-  //           <DrinkCard
-  //             key={index}
-  //             name={drink.strDrink}
-  //             imgUrl={drink.strDrinkThumb}
-  //             id={drink.idDrink}
-  //           />
-  //         ))}
-  //       </div>
-  //       </div>
-  //     )
 }
