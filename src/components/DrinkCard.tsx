@@ -1,4 +1,6 @@
+import { response } from 'express';
 import React, { useState } from 'react';
+import { FaHeart } from 'react-icons/fa';
 
 interface DrinkCardProps {
   name: string;
@@ -6,9 +8,10 @@ interface DrinkCardProps {
   id: string;
 }
 
-interface drinkDetails {
-  quantity?: string | number,
-  ingredients: string
+
+interface DrinkDetails {
+  quantity?: string | number;
+  ingredient: string;
 }
 
 const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
@@ -16,6 +19,7 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
   const [showModal, setShowModal] = useState(false);
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [instructions, setInstructions] = useState("");
+  const [favorited, setFavorited] = useState(false);
 
   const handleSubmit = async () => {
     try {
@@ -23,7 +27,7 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
       const data = await response.json();
       const drink = data.drinks[0];
       
-      const details: drinkDetails[] = [];
+      const details: DrinkDetails[] = [];
 
       // while loop to pull ingredients + quantity
       let ingNum = 1;
@@ -51,7 +55,8 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
   }
 
   const favSubmit = async () => {
-    const addDrink = await fetch('/drinks', {
+    const favoriteRoute = favorited ? '/save' : '/delete';
+    await fetch(favoriteRoute, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -60,6 +65,7 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
         image: imgUrl
       })
     })
+    setFavorited(true);
   }
 
   const closeModal = () => {
@@ -73,8 +79,9 @@ const DrinkCard: React.FC<DrinkCardProps> = ({ name, imgUrl, id }) => {
       <button
       onClick={() => handleSubmit()}
       >Instructions</button>
-      <button id='heart'
-      onClick={() => favSubmit()}>Favorite</button>
+      <button id='heart' onClick={() => favSubmit()}>
+        {favorited ? <FaHeart className='favorite'/> : <FaHeart className='notFavorite'/>}
+      </button>
 
       {showModal && (
               <div className="modal">
