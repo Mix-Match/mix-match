@@ -20,12 +20,12 @@ const router = express.Router();
 //router.get('/api/getinstructions/:id', getInstructionsById);
 
 // Route for user to save cocktail in DB
-router.post('/drinks', addSavedDrink, (req, res) => res.status(200).json({}));
+router.post('/', addSavedDrink, (req, res) => res.status(200).json({}));
 
 // Route for user to delete cocktail from DB
-router.delete('/drinks', deleteSavedDrink, (req, res) => res.status(200).json({}));
+router.delete('/', deleteSavedDrink, (req, res) => res.status(200).json({}));
 
 // Route for getting drinks from database
-router.get('/drinks', getSavedDrinks, (req, res) => res.status(200).json({}));
+router.get('/', getSavedDrinks, (req, res) => res.status(200).json({}));
 
 export default router;
